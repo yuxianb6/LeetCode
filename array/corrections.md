@@ -87,3 +87,81 @@ nums 包含 0，但保证能跳到终点
 为什么只遍历到 n-2？ → 最后一跳覆盖终点
 
 如何改成每次最多跳 k 步？ → 更新 farthest = max(farthest, i + min(nums[i], k))
+
+## 🔴 LC380 – Insert Delete GetRandom O(1)
+### 1. 错误点
+
+在 remove 中直接使用 ArrayList.remove(index)，忽略了这是 O(n) 操作
+
+删除元素后 没有同步更新 HashMap 中其他元素的 index
+
+一开始误以为 % arr.size() 或 round 能“扩大随机性”
+
+对 “用最后一个元素覆盖被删位置” 这个关键技巧不熟
+
+
+### 2.正确答案
+
+Category: Design / HashMap + ArrayList
+
+核心思路：
+
+用 ArrayList 存所有元素，支持 O(1) 随机访问
+
+用 HashMap<val, index> 记录每个元素在数组中的位置
+
+删除时不做真正的中间删除：
+
+找到要删元素的 index
+
+用数组最后一个元素覆盖该位置
+
+更新最后一个元素在 map 中的 index
+
+删除数组最后一位 & map 中的 val
+
+getRandom：直接在 [0, size) 中随机取 index
+
+### 3. Java Key Code
+```
+class RandomizedSet {
+    HashMap<Integer, Integer> map;
+    ArrayList<Integer> arr;
+
+    public RandomizedSet() {
+        map = new HashMap<>();
+        arr = new ArrayList<>();
+    }
+
+    public boolean insert(int val) {
+        if (map.containsKey(val)) return false;
+        map.put(val, arr.size());
+        arr.add(val);
+        return true;
+    }
+
+    public boolean remove(int val) {
+        if (!map.containsKey(val)) return false;
+
+        int idx = map.get(val);
+        int lastVal = arr.get(arr.size() - 1);
+
+        // 用最后一个元素覆盖被删除的位置
+        arr.set(idx, lastVal);
+        map.put(lastVal, idx);
+
+        // 删除最后一个元素
+        arr.remove(arr.size() - 1);
+        map.remove(val);
+
+        return true;
+    }
+
+    public int getRandom() {
+        int i = (int) (Math.random() * arr.size());
+        return arr.get(i);
+    }
+}
+
+```
+
