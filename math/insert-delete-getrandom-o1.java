@@ -19,14 +19,22 @@ class RandomizedSet {
     }
     
     public boolean remove(int val) {
-        if(map.containsKey(val)){
-            arr.remove(map.get(val));
-            map.remove(val);
-            return true;
-        }else{
+        if (!map.containsKey(val)) {
             return false;
         }
-        
+
+        int idx = map.get(val);
+        int lastVal = arr.get(arr.size() - 1);
+
+        // 1. 用最后一个元素覆盖 idx 位置
+        arr.set(idx, lastVal);
+        map.put(lastVal, idx);
+
+        // 2. 删除最后一个元素
+        arr.remove(arr.size() - 1);
+        map.remove(val);
+
+        return true;
     }
     
     public int getRandom() {
