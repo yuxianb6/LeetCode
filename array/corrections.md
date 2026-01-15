@@ -165,3 +165,73 @@ class RandomizedSet {
 
 ```
 
+
+## LC42 – Trapping Rain Water
+
+**状态**：🟡 partially mastered / unstable
+
+---
+
+### 题目描述
+
+Given n non-negative integers representing an elevation map where the width of each bar is 1, compute how much water it can trap after raining.
+
+---
+
+### 最初错误 / 困惑点
+
+* 误以为在双指针过程中，如果出现 `leftMax > rightMax`，仍然可能去结算 `left`，从而担心会“算多水”。
+* 没有明确区分 **“当前被结算的位置”** 与 **“全局最大高度”** 的关系。
+
+---
+
+### 正确认知（核心修正）
+
+* 双指针解法的**关键不变量**：
+
+  * **每一步都先结算当前高度较低的一侧**。
+  * 因此：
+
+    * 结算 `left` 时，一定满足 `leftMax ≤ rightMax`
+    * 结算 `right` 时，一定满足 `rightMax ≤ leftMax`
+* 这保证了水位公式中的 `min(leftMax, rightMax)` 正好等于被结算一侧的 `max`，不会算多。
+
+---
+
+
+### 关键代码（双指针，Java）
+
+```java
+public int trap(int[] height) {
+    int left = 0, right = height.length - 1;
+    int leftMax = 0, rightMax = 0;
+    int water = 0;
+
+    while (left < right) {
+        if (height[left] < height[right]) {
+            leftMax = Math.max(leftMax, height[left]);
+            water += leftMax - height[left];
+            left++;
+        } else {
+            rightMax = Math.max(rightMax, height[right]);
+            water += rightMax - height[right];
+            right--;
+        }
+    }
+    return water;
+}
+```
+
+---
+
+
+
+### 复盘总结（一句话）
+
+> 双指针法通过“每次先处理当前高度较低的一侧”，保证被结算一侧的最大高度不超过另一侧，从而可以当下安全结算水量。
+
+---
+
+
+
+
