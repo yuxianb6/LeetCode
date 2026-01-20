@@ -269,6 +269,23 @@ String[] words = s.trim().split("\s+");
 ```
 
 ---
+# LC76 Minimum Window Substring 错题总结
+
+## 1️⃣ 错误点
+- **问题现象**：在长字符串或重复字符的 testcase 中，输出总是空字符串 `""`。
+- **根本原因**：在判断窗口内某个字符是否满足目标频率时，使用了 `==` 比较两个 `Integer` 对象。
+- **具体表现**：
+```java
+if(count.get(c) == need.get(c)){
+    valid++;
+}
+```
+- **修正**：
+```java
+if(count.get(c).equals(need.get(c))){  
+    valid++;
+}
+```  
 
 
 
