@@ -24,7 +24,7 @@ class Solution {
                     valid++;
                 }
             }
-            while(valid>=num){
+            while(valid==num){
                 if(right-left+1<min){
                     min=right-left+1;
                     start=left;
@@ -35,7 +35,6 @@ class Solution {
                     if(count.get(delete)<need.get(delete)){
                         valid--;
                     }
-
                 }
                 left++;
             }
