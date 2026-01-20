@@ -20,7 +20,7 @@ class Solution {
             char c=s.charAt(right);
             if(need.containsKey(c)){
                 count.put(c,count.getOrDefault(c, 0)+1);
-                if(count.get(c)==need.get(c)){
+                if(count.get(c).equals(need.get(c))){
                     valid++;
                 }
             }
@@ -32,7 +32,7 @@ class Solution {
                 char delete=s.charAt(left);
                 if(need.containsKey(delete)){
                     count.put(delete,count.get(delete)-1);
-                    if(count.get(delete)<need.get(delete)){
+                    if(count.get(delete) < need.get(delete)){
                         valid--;
                     }
 
