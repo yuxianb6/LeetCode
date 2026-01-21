@@ -311,71 +311,156 @@ class Solution {
 }
 
 ```
+
 ---
-# ❌ LeetCode 133 — Clone Graph 错题总结
+#  LeetCode DFS 图论错题总结
 
-## 题目
-给定一个无向连通图中的一个节点，要求深拷贝整个图：
-- 每个节点包含 `val` 和 `neighbors`
-- 图中可能存在 **环**
-- 不能只复制一层邻居
+## Clone Graph (LC 133)
 
-## 错误点
+### 题目核心
 
-### ❌ 错误做法
+* 给定一个图节点，深拷贝整个图
+* 图可能有环
+* 需要返回新图
+
+### 错误点
+
+* 只 clone 一层邻居 → 图没被完全 clone
+* `map.put(node, copy)` 放在递归之后 → 遇到环会无限递归
+
+### 正确思路
+
+* 用 `Map<Node, Node>` 记录已经 clone 的节点（visited）
+* DFS 克隆邻居
+* 先 put 再递归
+
+### 核心模板
+
 ```java
-// 伪代码
-clone 当前节点
-for (neighbor : node.neighbors) {
-    clone neighbor
+Map<Node, Node> map = new HashMap<>();
+Node dfs(Node node) {
+    if(map.containsKey(node)) return map.get(node);
+    Node copy = new Node(node.val);
+    map.put(node, copy);
+    for(Node nei: node.neighbors) copy.neighbors.add(dfs(nei));
+    return copy;
 }
 ```
-## 正确做法
+
+---
+
+## Surrounded Regions (LC 130)
+
+### 题目核心
+
+* 2D 矩阵 'O' 和 'X'
+* 捕获被 X 包围的 O → 变为 X
+* 边界 O 不变
+
+### 错误点
+
+* DFS 返回是否消除思路容易漏边界 O
+* 没标记边界 DFS → 部分 O 被误捕获
+
+### 正确思路
+
+* DFS 标记所有边界连通的 O 为临时字符（如 'S'）
+* 遍历整个矩阵：
+
+  * 'S' → O
+  * O → X
+
+### 核心模板
+
 ```java
-/*
-// Definition for a Node.
-class Node {
-    public int val;
-    public List<Node> neighbors;
-    public Node() {
-        val = 0;
-        neighbors = new ArrayList<Node>();
-    }
-    public Node(int _val) {
-        val = _val;
-        neighbors = new ArrayList<Node>();
-    }
-    public Node(int _val, ArrayList<Node> _neighbors) {
-        val = _val;
-        neighbors = _neighbors;
-    }
-}
-*/
-
-class Solution {
-    HashMap<Node,Node>map=new HashMap<>();
-    public Node cloneGraph(Node node) {
-        if (node == null) return null;
-        return dfs(node);
-    }
-    public Node dfs(Node root){
-        if(map.containsKey(root)){
-            return map.get(root);
-        }
-        Node clone=new Node(root.val);
-        map.put(root,clone);
-        for (Node nei : root.neighbors) {
-            clone.neighbors.add(dfs(nei));
-        }
-
-        return clone;
-
-    }
-            
-    
+void dfs(int r, int c, char[][] board) {
+    if(r<0||r>=board.length||c<0||c>=board[0].length||board[r][c]!='O') return;
+    board[r][c] = 'S';
+    dfs(r+1,c,board);
+    dfs(r-1,c,board);
+    dfs(r,c+1,board);
+    dfs(r,c-1,board);
 }
 ```
+
 ---
+
+## Evaluate Division (LC 399)
+
+### 题目核心
+
+* 已知 a/b = 2.0 等方程，求查询 x/y
+* 转换为图：节点=变量，边=除法关系
+
+### 正确思路
+
+* 构建加权有向图
+* DFS / BFS 查找路径，累乘边权值
+* 用 HashSet 标记当前 DFS 栈路径，防止环
+
+### 核心模板
+
+```java
+Map<String, Map<String, Double>> graph;
+double dfs(String curr, String target, Set<String> visited){
+    if(!graph.containsKey(curr)) return -1.0;
+    if(curr.equals(target)) return 1.0;
+    visited.add(curr);
+    for(Map.Entry<String, Double> nei : graph.get(curr).entrySet()){
+        if(!visited.contains(nei.getKey())){
+            double product = dfs(nei.getKey(), target, visited);
+            if(product!=-1.0) return product*nei.getValue();
+        }
+    }
+    return -1.0;
+}
+```
+
+---
+
+##  Course Schedule (LC 207)
+
+### 题目核心
+
+* 判断有向图是否有环
+* 课程编号 0~n-1，先修关系 [a,b] 表示 b->a
+
+### 错误点
+
+* ArrayList.add 返回 boolean 不能直接放 map
+* DFS 用 boolean visited 无法区分“正在访问”和“已完成” → 环检测失败
+* graph 局部变量无法被 DFS 访问
+
+### 正确思路
+
+* DFS + 回溯（pathVisited）检测环
+* finished boolean 跳过已完成节点
+* 或使用三状态数组（0=未访问,1=访问中,2=完成）
+
+### 核心模板
+
+```java
+Map<Integer, List<Integer>> graph;
+boolean[] finished;
+boolean dfs(int node, Set<Integer> pathVisited){
+    if(pathVisited.contains(node)) return false;
+    if(finished[node]) return true;
+    pathVisited.add(node);
+    for(int nei : graph.getOrDefault(node,new ArrayList<>())){
+        if(!dfs(nei, pathVisited)) return false;
+    }
+    pathVisited.remove(node);
+    finished[node] = true;
+    return true;
+}
+```
+
+### 回溯作用
+
+* 确保 DFS 栈路径上的节点标记准确
+* 检测环只在当前递归路径生效
+* 避免 boolean visited 混淆“
+
 
 
 
