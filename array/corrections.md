@@ -289,7 +289,7 @@ if(count.get(c).equals(need.get(c))){
 ---
 # LC98 Valid BST
 
-## 1️⃣ 错误点
+## 错误点
 - **问题现象**：觉得迭代只能从下往上
 - **修正**：
 ```java
@@ -310,7 +310,72 @@ class Solution {
     }
 }
 
-```  
+```
+---
+# ❌ LeetCode 133 — Clone Graph 错题总结
+
+## 题目
+给定一个无向连通图中的一个节点，要求深拷贝整个图：
+- 每个节点包含 `val` 和 `neighbors`
+- 图中可能存在 **环**
+- 不能只复制一层邻居
+
+## 错误点
+
+### ❌ 错误做法
+```java
+// 伪代码
+clone 当前节点
+for (neighbor : node.neighbors) {
+    clone neighbor
+}
+```
+## 正确做法
+```java
+/*
+// Definition for a Node.
+class Node {
+    public int val;
+    public List<Node> neighbors;
+    public Node() {
+        val = 0;
+        neighbors = new ArrayList<Node>();
+    }
+    public Node(int _val) {
+        val = _val;
+        neighbors = new ArrayList<Node>();
+    }
+    public Node(int _val, ArrayList<Node> _neighbors) {
+        val = _val;
+        neighbors = _neighbors;
+    }
+}
+*/
+
+class Solution {
+    HashMap<Node,Node>map=new HashMap<>();
+    public Node cloneGraph(Node node) {
+        if (node == null) return null;
+        return dfs(node);
+    }
+    public Node dfs(Node root){
+        if(map.containsKey(root)){
+            return map.get(root);
+        }
+        Node clone=new Node(root.val);
+        map.put(root,clone);
+        for (Node nei : root.neighbors) {
+            clone.neighbors.add(dfs(nei));
+        }
+
+        return clone;
+
+    }
+            
+    
+}
+```
+---
 
 
 
