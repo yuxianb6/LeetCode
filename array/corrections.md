@@ -285,6 +285,31 @@ if(count.get(c) == need.get(c)){
 if(count.get(c).equals(need.get(c))){  
     valid++;
 }
+```
+---
+# LC98 Valid BST
+
+## 1️⃣ 错误点
+- **问题现象**：觉得迭代只能从下往上
+- **修正**：
+```java
+class Solution {
+    public boolean isValidBST(TreeNode root) {
+        return validate(root, null, null);
+    }
+    
+    private boolean validate(TreeNode root, Integer min, Integer max) {
+        if (root == null) return true;
+
+        if ((min != null && root.val <= min) || (max != null && root.val >= max)) {
+            return false;
+        }
+
+        return validate(root.left, min, root.val) &&
+               validate(root.right, root.val, max);
+    }
+}
+
 ```  
 
 
