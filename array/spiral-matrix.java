@@ -6,21 +6,26 @@ class Solution {
         int ur=0;
         int dr=matrix.length-1;
         while(lc<=rc&&ur<=dr){
-            if(lc==rc&&ur==dr){
-                ans.add(matrix[ur][lc]);
-            }
-            for(int i=lc;i<rc;i++){
+            // if(lc==rc&&ur==dr){
+            //     ans.add(matrix[ur][lc]);
+            // }
+            for(int i=lc;i<=rc;i++){
                 ans.add(matrix[ur][i]);
             }
-            for(int j=ur;j<dr;j++){
+
+            for(int j=ur+1;j<=dr;j++){
                 ans.add(matrix[j][rc]);
             }
-            for(int i=rc;i>lc;i--){
-                ans.add(matrix[dr][i]);
+
+            if(ur < dr) {
+                for(int i = rc - 1; i >= lc; i--) ans.add(matrix[dr][i]);
             }
-            for(int j=dr;j>ur;j--){
-                ans.add(matrix[j][lc]);
+            if(lc < rc) {
+                for(int i = dr - 1; i > ur; i--) ans.add(matrix[i][lc]);
             }
+              
+            
+
             rc--;
             lc++;
             ur++;
