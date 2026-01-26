@@ -504,7 +504,48 @@ class Solution {
 | 180°     | **Reverse Rows + Reverse Columns** <br>先反转每一行，再反转每一列 |
 | 270°     | **Transpose + Reverse Columns** <br>先转置矩阵，再将每一列反转 |
 
+## 错题总结 — LeetCode 49：Group Anagrams
 
+### 1️⃣ 字符串排序后的 key 生成问题
+
+**原来写法错误：**
+```java
+String[] s = str.split("");
+Arrays.sort(s);
+String orderedS = s.toString(); // ❌ 这是对象地址，不是内容
+```
+**正确的：**
+1.用String.join
+```java
+String[] s = str.split("");
+Arrays.sort(s);
+String orderedS = String.join("", s);
+```
+2.用chars[]
+```java
+char[] chars = str.toCharArray(); // 转为 char 数组
+Arrays.sort(chars);               // 排序
+String orderedS = new String(chars); // 正确生成排序后的字符串
+
+```
+### HashMap 插入优化
+```java
+group.computeIfAbsent(orderedS, k -> new ArrayList<>()).add(str);
+```
+### 不用排序的优化
+```java
+int[] count = new int[26];
+for (char c : str.toCharArray()) {
+    count[c - 'a']++;
+}
+StringBuilder sb = new StringBuilder();
+for (int num : count) {
+    sb.append('#').append(num); // 拼接成唯一 key
+}
+String key = sb.toString();
+group.computeIfAbsent(key, k -> new ArrayList<>()).add(str);
+
+```
 
 
 
