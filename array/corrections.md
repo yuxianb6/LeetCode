@@ -461,6 +461,49 @@ boolean dfs(int node, Set<Integer> pathVisited){
 * 检测环只在当前递归路径生效
 * 避免 boolean visited 混淆“
 
+##  Image Rotate (LC 207)
+```java
+class Solution {
+    public void rotate(int[][] matrix) {
+        int n=matrix.length;
+        for(int i=0;i<n;i++){
+            for(int j=0;j<n;j++){
+                if(i==j){
+                    continue;
+                }
+                if(i<j){
+                    int tmp=matrix[i][j];
+                    matrix[i][j]=matrix[j][i];
+                    matrix[j][i]=tmp;
+                }
+                
+            }
+        }
+        for(int i=0;i<n;i++){
+            int left=0;
+            int right=n-1;
+            while(left<right){
+                int t=matrix[i][right];
+                matrix[i][right]=matrix[i][left];
+                matrix[i][left]=t;
+                right--;
+                left++;
+            }
+        }
+
+        
+    }
+}
+```
+
+旋转图像的常用操作总结：
+
+| 旋转角度 | 操作步骤 |
+|----------|----------|
+| 90°      | **Transpose + Reverse Rows** <br>先转置矩阵，再将每一行反转 |
+| 180°     | **Reverse Rows + Reverse Columns** <br>先反转每一行，再反转每一列 |
+| 270°     | **Transpose + Reverse Columns** <br>先转置矩阵，再将每一列反转 |
+
 
 
 
