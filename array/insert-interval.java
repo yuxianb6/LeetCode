@@ -21,6 +21,10 @@ class Solution {
             }
 
         }
+        if (!insert) {
+            res.add(newInterval);
+        }
+
         int size=res.size();
         int[][]ans=new int[size][2];
         for(int i=0;i<size;i++){
