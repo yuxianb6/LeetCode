@@ -21,7 +21,7 @@ public class Solution {
             }
         
         }
-        if(slow==null||fast==null||head.next==null){
+        if(slow==null||fast==null){
             return null;
         }
         fast=head;
