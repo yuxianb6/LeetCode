@@ -1,54 +1,68 @@
 class Solution {
     public int calculate(String s) {
-        char[]chars=s.toCharArray();
-        Stack<Integer>number=new Stack<>();
-        Stack<Character>op=new Stack<>();
-        for(int i=0;i<chars.length;i++){
-            if (Character.isDigit(chars[i])) {
-                int num = 0;
-                while (i < chars.length && Character.isDigit(chars[i])) {
-                    num = num * 10 + (chars[i] - '0');
-                    i++;
-                }
-                number.push(num);
-                i--; 
-            }else if("+-*/".indexOf(chars[i])!= -1){
-                op.push(chars[i]);
-            }else if(chars[i]==')'){
-                int res = 0;
-                int b = number.pop();
-                while (number.peek() != null) {
-                    char oper = op.pop();
-                    int a = number.pop();
-                    if (oper == '+') res = a + b;
-                    else res = a - b;
-                    b=res;
-                }
-                number.pop();
-                number.push(b);
-            }else if(chars[i]==' '){
-                continue;
-            }else{
-                number.push(null); 
+
+        Stack<Integer> stack = new Stack<Integer>();
+        int operand = 0;
+        int result = 0; // For the on-going result
+        int sign = 1;  // 1 means positive, -1 means negative
+
+        for (int i = 0; i < s.length(); i++) {
+
+            char ch = s.charAt(i);
+            if (Character.isDigit(ch)) {
+
+                // Forming operand, since it could be more than one digit
+                operand = 10 * operand + (int) (ch - '0');
+
+            } else if (ch == '+') {
+
+                // Evaluate the expression to the left,
+                // with result, sign, operand
+                result += sign * operand;
+
+                // Save the recently encountered '+' sign
+                sign = 1;
+
+                // Reset operand
+                operand = 0;
+
+            } else if (ch == '-') {
+
+                result += sign * operand;
+                sign = -1;
+                operand = 0;
+
+            } else if (ch == '(') {
+
+                // Push the result and sign on to the stack, for later
+                // We push the result first, then sign
+                stack.push(result);
+                stack.push(sign);
+
+                // Reset operand and result, as if new evaluation begins for the new sub-expression
+                sign = 1;
+                result = 0;
+
+            } else if (ch == ')') {
+
+                // Evaluate the expression to the left
+                // with result, sign and operand
+                result += sign * operand;
+
+                // ')' marks end of expression within a set of parenthesis
+                // Its result is multiplied with sign on top of stack
+                // as stack.pop() is the sign before the parenthesis
+                result *= stack.pop();
+
+                // Then add to the next operand on the top.
+                // as stack.pop() is the result calculated before this parenthesis
+                // (operand on stack) + (sign on stack * (result from parenthesis))
+                result += stack.pop();
+
+                // Reset the operand
+                operand = 0;
             }
         }
-        // 反转栈，使得可以从左到右计算
-        Stack<Integer> numTemp = new Stack<>();
-        Stack<Character> opTemp = new Stack<>();
-        while (!number.isEmpty()) numTemp.push(number.pop());
-        while (!op.isEmpty()) opTemp.push(op.pop());
-
-        int res = numTemp.pop();  // 拿到最左边的数
-        while (!opTemp.isEmpty()) {
-            char oper = opTemp.pop();
-            int b = numTemp.pop();
-            if (oper == '+') res = res + b;
-            else res = res - b;
-        }
-        return res;
-
-        
-        
-        
+        return result + (sign * operand);
     }
 }
