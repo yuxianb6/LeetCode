@@ -34,7 +34,7 @@ class Solution {
             carry = sum / 10;
             cur.next = new ListNode(sum % 10);
             cur = cur.next;
-            l1 = l2.next;
+            l2 = l2.next;
         }
         if (carry != 0) {
             cur.next = new ListNode(carry);
