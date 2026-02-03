@@ -30,11 +30,11 @@ class Solution {
 
         }
         while(l2!=null){
-            int sum = l1.val + carry;
+            int sum = l2.val + carry;
             carry = sum / 10;
             cur.next = new ListNode(sum % 10);
             cur = cur.next;
-            l1 = l1.next;
+            l1 = l2.next;
         }
         if (carry != 0) {
             cur.next = new ListNode(carry);
