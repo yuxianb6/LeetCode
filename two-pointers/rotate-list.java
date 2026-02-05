@@ -42,7 +42,7 @@ class Solution {
         cur=next;
         next=cur.next;
         int rest=size-k-1;
-        while(cur!=null&&next!=null&&rest>0){
+        while(rest>0){
             cur.next=next.next;
             next.next=prev.next;
             prev.next=next;
