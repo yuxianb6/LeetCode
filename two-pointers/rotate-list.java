@@ -14,7 +14,7 @@ class Solution {
         dummy.next=head;
         ListNode prev=dummy;
         ListNode cur=head;
-        if(cur==null||cur.next==null||k==0){
+        if(cur==null||cur.next==null){
             return head;
         }
         ListNode next=cur.next;
@@ -27,9 +27,6 @@ class Solution {
             size++;
         }
         k%=size;
-        if(k==0){
-            return head;
-        }
         int round=k-1;
         prev=dummy;
         cur=dummy.next;
