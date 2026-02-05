@@ -18,15 +18,23 @@ class Solution {
             return head;
         }
         ListNode next=cur.next;
-        int size=1;
+        int size=0;
+        ListNode ptr=head;
+        while(ptr!=null){
+            ptr=ptr.next;
+            size++;
+        }
+        k%=size;
+        if(k==0){
+            return head;
+        }
         while(next!=null){
             cur.next=next.next;
             next.next=prev.next;
             prev.next=next;
             next=cur.next;
-            size++;
         }
-        k%=size;
+        
         int round=k-1;
         prev=dummy;
         cur=dummy.next;
