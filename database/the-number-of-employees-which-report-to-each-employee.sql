@@ -8,6 +8,7 @@ select r.reports_to as employee_id,e.name,r.reports_count,r.average_age
 from reports r
 join employees e
 on r.reports_to=e.employee_id
+order by employee_id
 
 
 
