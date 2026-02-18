@@ -6,3 +6,4 @@ and (not exists(
     from employees e2
     where e1.manager_id=e2.employee_id
 ) and manager_id is not null)
+order by employee_id
