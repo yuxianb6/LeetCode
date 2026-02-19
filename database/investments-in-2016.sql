@@ -19,7 +19,7 @@ qualified2 as(
         and i1.lat=i2.lat
     )
 )
-select sum(tiv_2016) as tiv_2016
+select round(sum(tiv_2016),2) as tiv_2016
 from insurance
 where pid in (select pid from qualified1)
 and pid in (select pid from qualified2)
