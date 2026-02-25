@@ -1,12 +1,13 @@
-with ordered as(
-    select turn, person_id,person_name,weight,sum(weight) over(order by turn rows between unbounded preceding and current row) total_weight
+with sum as(
+    select person_id,person_name,turn,sum(weight)over(order by turn asc) as total
     from queue
-    order by turn
 )
 select person_name
-from ordered
-where total_weight=(
-    select max(total_weight)
-    from ordered
-    where total_weight<=1000
+from sum 
+where total=(
+    select max(total)
+    from sum
+    where total<=1000 
+
 )
+
